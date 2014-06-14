@@ -6,6 +6,7 @@ var	express = require('express'),
 	app.set("views", __dirname + "/views");
 	app.set("view engine", "jade");
 	app.use("/stylesheets", express.static(__dirname + '/stylesheets'));
+	app.use("/js", express.static(__dirname + '/js'));
 	app.use("/images", express.static(__dirname + '/images'));
 
 
@@ -45,11 +46,7 @@ MongoClient.connect("mongodb://localhost:27017/dota2", function(err, db) {
 	});
 
 	function findBySteamId(data, steamId){
-		var start = (new Date).getTime();
-		var pages = data[data.length - 1].pages;
-		var gameNum = 0;
-		var gamesFound = [];
-
+		var pages = data;
 
 		for (var i = 0; i < pages.length; i++) {
 			for (var q = 0; q < pages[i].games.length; q++) {
@@ -67,26 +64,62 @@ MongoClient.connect("mongodb://localhost:27017/dota2", function(err, db) {
 				};
 			};
 		};
-
-		var diff = (new Date).getTime() - start;
-		console.log("Time taken:", diff)
 	}
 
-	app.get('/steamid/:steamId', function(req, res){
+	function findByHeroId(data, heroId){
+		var pages = data;
+		var gameNum = 0;
+		var gamesFound = [];
+
+		for (var i = 0; i < pages.length; i++) {
+			for (var q = 0; q < pages[i].games.length; q++) {
+				for (var w = 0; w < pages[i].games[q].goodPlayers.length; w++) {
+
+					if (pages[i].games[q].goodPlayers[w].heroId == heroId ) {
+						gamesFound[gameNum] = pages[i].games[q];
+						gameNum++;
+					};
+
+					if (pages[i].games[q].badPlayers[w]) {
+						if (pages[i].games[q].badPlayers[w].heroId == heroId ) {
+							gamesFound[gameNum] = pages[i].games[q];
+							gameNum++;
+						}
+					};
+				};
+			};
+		};
+
+		return gamesFound;
+	}
+
+
+	app.get('/search/', function(req, res){
 		Collections.Games.find().toArray(function(err, pages) {
 			if (err) {
 				return console.error(err);
 			};
-			
-			var gamesFound = findBySteamId(pages, req.params.steamId);
+
+			var gamesFound = pages[pages.length - 1].pages;
+
+			if (req.query.heroId) {
+				gamesFound = findByHeroId(gamesFound, req.query.heroId);
+			};
+
+			// if (req.query.steamId) {
+			// 	gamesFound = findBySteamId(gamesFound, req.query.steamId);
+			// };
+
+
+
 			
 			res.json(
 				gamesFound
 			)
 
 		});
-
 	});
+
 });
 
 app.listen(1111);
