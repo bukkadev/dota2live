@@ -13,3 +13,7 @@
 .navbar-inputs input{
 	margin: 0px 5px;
 }
+
+.selected {
+	background-color: rgb(198, 234, 245);
+}

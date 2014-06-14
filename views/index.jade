@@ -5,9 +5,15 @@ html(lang="en")
 	link(href='/stylesheets/dota2minimapheroes.css', rel='stylesheet')
 	link(href='/stylesheets/custom.css', rel='stylesheet')
 	link(href='http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css', rel='stylesheet')
+	if games
+		script(type='text/javascript').
+			var games = !{JSON.stringify(games)};
+	if gamesFound
+		script(type='text/javascript').
+			var gamesFound = !{JSON.stringify(gamesFound)};
 	script(type='text/javascript').
-		var games = !{JSON.stringify(games)};
 		var pages = !{JSON.stringify(pages)};
+
 	body
 	nav.navbar.navbar-default.navbar-static-top
 		div.container
@@ -15,23 +21,25 @@ html(lang="en")
 				a.navbar-brand(href="/") Live Dota 2 Games
 			div.navbar-form.navbar-left.navbar-inputs
 				div.form-group
-					input(type="number", class="form-control", placeholder="Steam ID", name="steamId")
+					input(type="number", class="form-control", placeholder="Steam ID", name="steamId", value = "#{steamId}")
 				div.form-group
-					input(type="number", class="form-control", placeholder="Hero ID", name="heroId", min="0")
+					input(type="number", class="form-control", placeholder="Hero ID", name="heroId", min="0", value = "#{heroId}")
 				div.form-group
-					input(type="text", class="form-control", placeholder="Name", name="name")
+					input(type="text", class="form-control", placeholder="Name", name="name", value = "#{name}")
 				button(class="btn btn-default search-btn") Search
-			ul.pagination.pull-right
-				if page == 1	
-					li.disabled
-						span &laquo;
-				else
+
+			if page
+				ul.pagination.pull-right
+					if page == 1	
+						li.disabled
+							span &laquo;
+					else
+						li
+							a(href="/?page=#{page - 1}") &laquo;
+					li.active
+						a(href="/?page=#{page}")= page
 					li
-						a(href="/?page=#{page - 1}") &laquo;
-				li.active
-					a(href="/?page=#{page}")= page
-				li
-					a(href="/?page=#{page - 1 + 2}") &raquo;
+						a(href="/?page=#{page - 1 + 2}") &raquo;
 
 	div.container
 			div.row
@@ -81,6 +89,57 @@ html(lang="en")
 												span.pull-right.label.label-default= games.games[y].badPlayers[x].steamId
 						hr
 				
+			else if gamesFound
+				div.col-sm-12.alert.alert-success Found #{gamesFound[0].gamesFound} games
+
+				- games = gamesFound[1];
+				- for (var y = 0; y < games.length; y++ )
+					table.table.table-bordered
+							- var gameTime = parseInt(games[y].gameTime)
+							- var minutes = Math.floor(gameTime / 60)
+							if (minutes.toString().length == 1)
+								-	minutes = "0" + minutes;
+
+							- var seconds = gameTime - minutes * 60
+							if (seconds.toString().length == 1)
+								-	seconds = "0" + seconds;
+							tr
+								th(colspan="2").
+									Game Time #{minutes} : #{seconds} (#{gameTime}s)
+							tr
+								td Radiant
+								td Dire
+							- for (var x = 0; x < 5; x++)
+								tr
+									mixin playerGood
+										if games[y].goodPlayers[x]
+												if games[y].goodPlayers[x].heroId
+													i(class="d2mh hero-#{ games[y].goodPlayers[x].heroId }") 
+												span= " " + games[y].goodPlayers[x].name
+												span.pull-right.label.label-default= games[y].goodPlayers[x].steamId
+
+									mixin playerBad
+										if games[y].badPlayers[x]
+											if games[y].badPlayers[x].heroId
+												i(class="d2mh hero-#{ games[y].badPlayers[x].heroId }")
+											span= " " + games[y].badPlayers[x].name
+											span.pull-right.label.label-default= games[y].badPlayers[x].steamId
+
+									if ( games[y].goodPlayers[x].steamId == steamId || games[y].goodPlayers[x].heroId == heroId || games[y].goodPlayers[x].name == name)
+										td.col-sm-6.selected
+											+playerGood
+									else
+										td.col-sm-6
+											+playerGood
+
+									if ( games[y].badPlayers[x].steamId == steamId || games[y].badPlayers[x].heroId == heroId || games[y].badPlayers[x].name == name)
+										td.col-sm-6.selected
+											+playerBad
+									else
+										td.col-sm-6
+											+playerBad
+										
+						hr
 			else
 				div.col-sm-12.alert.alert-danger.
 					No games found.

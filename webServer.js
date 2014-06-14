@@ -100,22 +100,41 @@ MongoClient.connect("mongodb://localhost:27017/dota2", function(err, db) {
 				return console.error(err);
 			};
 
-			var gamesFound = pages[pages.length - 1].pages;
+			var games = pages[pages.length - 1].pages;
 
-			if (req.query.heroId) {
-				gamesFound = findByHeroId(gamesFound, req.query.heroId);
-			};
+			steamId = "";
+			heroId = "";
+			name = "";
 
-			// if (req.query.steamId) {
-			// 	gamesFound = findBySteamId(gamesFound, req.query.steamId);
-			// };
-
-
-
+			if (req.query.steamId) {
+				gamesFound = [findBySteamId(games, req.query.steamId)];
+				steamId = req.query.steamId;
+			}else if (req.query.heroId) {
+				gamesFound = findByHeroId(games, req.query.heroId);
+				heroId = req.query.heroId;
+			}else if(req.query.name){
+				gamesFound = findByName(games, req.query.name);
+				name = req.query.name;
+			}
 			
-			res.json(
-				gamesFound
-			)
+			gamesFound = [{"gamesFound" : gamesFound.length}, gamesFound];
+
+			if (req.query.json) {	
+
+				res.json(
+					gamesFound
+				);
+
+			}else{
+				res.render("index", {gamesFound: gamesFound, pages:pages, steamId: steamId, heroId: heroId, name : name}, function(err, html) {
+					if (err) {
+						console.error(err);
+					};
+
+					res.send(html);
+				});
+			}
+
 
 		});
 	});
