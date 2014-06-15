@@ -25,7 +25,7 @@ html(lang="en")
 				div.form-group
 					input(type="number", class="form-control", placeholder="Hero ID", name="heroId", min="0", value = "#{heroId}")
 				div.form-group
-					input(type="text", class="form-control", placeholder="Name", name="name", value = "#{name}")
+					input(type="text", class="form-control", placeholder="Name", name="name", value = "#{steamName}")
 				button(class="btn btn-default search-btn") Search
 
 			if page
@@ -55,9 +55,54 @@ html(lang="en")
 							- var seconds = gameTime - minutes * 60
 							if (seconds.toString().length == 1)
 								-	seconds = "0" + seconds;
+
+
+							- var towerState = games.games[y].towerState.toString(2);
+							- towerStateArray = towerState.split("");
+							- for(var i=0; i<towerStateArray.length; i++) { towerStateArray[i] = parseInt(towerStateArray[i], 10); }
+							//- - towerStateDire = towerStateArray.splice(0, 12)
+							//- - towerStateRadiant = towerStateArray.splice(11, 22)
+
+							- var test = 1;
+
+							- var gameMode = games.games[y].gameMode;
 							tr
-								th(colspan="2").
-									Game Time #{minutes} : #{seconds} (#{gameTime}s)
+								th(colspan="2")
+									div.row
+										div.col-sm-6
+											|Game Time #{minutes} : #{seconds} (#{gameTime}s)
+											br
+											|Game mode: #{gameMode}
+											br
+											|Tower State: #{towerState}
+										div.col-sm-6
+											div.tower_state_box
+												div.radiant-towers
+			
+													span.tower.a1(class=towerStateArray[11]?'':'destroyed')
+													span.tower.a2(class=towerStateArray[12]?'':'destroyed')
+													span.tower.b1(class=towerStateArray[13]?'':'destroyed')
+													span.tower.b2(class=towerStateArray[14]?'':'destroyed')
+													span.tower.b3(class=towerStateArray[15]?'':'destroyed')
+													span.tower.m1(class=towerStateArray[16]?'':'destroyed')
+													span.tower.m2(class=towerStateArray[17]?'':'destroyed')
+													span.tower.m3(class=towerStateArray[18]?'':'destroyed')
+													span.tower.t1(class=towerStateArray[19]?'':'destroyed')
+													span.tower.t2(class=towerStateArray[20]?'':'destroyed')
+													span.tower.t3(class=towerStateArray[21]?'':'destroyed')
+
+												div.dire-towers
+													span.tower.a1(class=towerStateArray[0]?'':'destroyed')
+													span.tower.a2(class=towerStateArray[1]?'':'destroyed')
+													span.tower.b1(class=towerStateArray[2]?'':'destroyed')
+													span.tower.b2(class=towerStateArray[3]?'':'destroyed')
+													span.tower.b3(class=towerStateArray[4]?'':'destroyed')
+													span.tower.m1(class=towerStateArray[5]?'':'destroyed')
+													span.tower.m2(class=towerStateArray[6]?'':'destroyed')
+													span.tower.m3(class=towerStateArray[7]?'':'destroyed')
+													span.tower.t1(class=towerStateArray[8]?'':'destroyed')
+													span.tower.t2(class=towerStateArray[9]?'':'destroyed')
+													span.tower.t3(class=towerStateArray[10]?'':'destroyed')
 							tr
 								td Radiant
 								td Dire
@@ -89,8 +134,11 @@ html(lang="en")
 												span.pull-right.label.label-default= games.games[y].badPlayers[x].steamId
 						hr
 				
-			else if gamesFound
-				div.col-sm-12.alert.alert-success Found #{gamesFound[0].gamesFound} games
+			else if gamesFound[0].gamesFound > 0 && gamesFound[1][0]
+				if gamesFound[0].gamesFound == 1
+					div.col-sm-12.alert.alert-success Found #{gamesFound[0].gamesFound} game
+				else
+					div.col-sm-12.alert.alert-success Found #{gamesFound[0].gamesFound} games
 
 				- games = gamesFound[1];
 				- for (var y = 0; y < games.length; y++ )

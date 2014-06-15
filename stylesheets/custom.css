@@ -17,3 +17,132 @@
 .selected {
 	background-color: rgb(198, 234, 245);
 }
+
+.tower_state_box{
+	width: 100px;
+	height: 100px;
+	float: right;
+	border: 1px solid #ddd;
+	position: relative;
+}
+
+.radiant-towers .tower{
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background-color: rgba(44, 153, 52, 0.2);
+	border-radius: 100%;
+	border: 2px solid rgb(44, 153, 52);
+}
+
+.dire-towers .tower{
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background-color: rgba(153, 44, 44, 0.2);
+	border-radius: 100%;
+	border: 2px solid rgb(153, 44, 44);
+}
+
+.tower.destroyed{
+	background-color: rgba(0, 0, 0, 0.08);
+	border: 2px solid rgba(0, 0, 0, 0.18);
+}
+
+
+.radiant-towers .a1{
+	left:5px;
+	bottom: 15px;
+}
+.radiant-towers .a2{
+	left:15px;
+	bottom: 5px;
+}
+
+.radiant-towers .t1{
+	left:5px;
+	bottom: 30px;
+}
+.radiant-towers .t2{
+	left:5px;
+	bottom: 50px;
+}
+.radiant-towers .t3{
+	left:5px;
+	bottom: 70px;
+}
+
+.radiant-towers .m1{
+	left:20px;
+	bottom: 20px;
+}
+.radiant-towers .m2{
+	left:30px;
+	bottom: 30px;
+}
+.radiant-towers .m3{
+	left: 40px;
+	bottom: 40px;
+}
+
+.radiant-towers .b1{
+	left:30px;
+	bottom: 5px;
+}
+.radiant-towers .b2{
+	left:50px;
+	bottom: 5px;
+}
+.radiant-towers .b3{
+	left: 70px;
+	bottom: 5px;
+}
+
+.dire-towers .a1{
+	right:15px;
+	top: 5px;
+}
+.dire-towers .a2{
+	right:5px;
+	top: 15px;
+}
+
+.dire-towers .b1{
+	right:5px;
+	top: 30px;
+}
+.dire-towers .b2{
+	right:5px;
+	top: 50px;
+}
+.dire-towers .b3{
+	right:5px;
+	top: 70px;
+}
+
+.dire-towers .m1{
+	right:20px;
+	top: 20px;
+}
+.dire-towers .m2{
+	right:30px;
+	top: 30px;
+}
+.dire-towers .m3{
+	right: 40px;
+	top: 40px;
+}
+
+.dire-towers .t1{
+	right:30px;
+	top: 5px;
+}
+.dire-towers .t2{
+	right:50px;
+	top: 5px;
+}
+.dire-towers .t3{
+	right: 70px;
+	top: 5px;
+}
+
